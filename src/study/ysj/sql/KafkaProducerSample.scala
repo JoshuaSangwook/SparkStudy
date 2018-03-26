@@ -22,15 +22,15 @@ object KafkaProducerSample extends App {
   try {
     val rnd = new Random()
     val fakePage = Set("/main", "/intro", "/detail", "unknown")
-    val format = new SimpleDateFormat("yyyyMMdd")
+    val format = new SimpleDateFormat("yyyyMMddHHmmss")
     
     for (n <- Range(0, repCnt)) {
-      val value = format.format(new Date()) + 
-        ",00000" + rnd.alphanumeric.filter(_.isDigit).take(5).mkString + 
+      val key = format.format(new Date()) 
+      val value = "00000" + rnd.alphanumeric.filter(_.isDigit).take(5).mkString + 
         "," + rnd.alphanumeric.take(10).mkString + 
         "," + fakePage.toVector(rnd.nextInt(fakePage.size))
         
-      val data = new ProducerRecord[String, String](topic, value)
+      val data = new ProducerRecord[String, String](topic, key, value)
   
       producer.send(data)
       Thread.sleep(500)
