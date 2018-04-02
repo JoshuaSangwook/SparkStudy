@@ -28,9 +28,18 @@ object DataSetTest {
       .persist()
     
     ds.show()
-    ds.groupByKey(_.job).count().show(false)
-    ds.groupByKey(_.job).agg(max("age").as[Int], countDistinct("age").as[Long]).show()
-    ds.groupByKey(_.job).mapValues(p => p.name + "(" + p.age + ")").reduceGroups((s1, s2) => s1 + s2).show()
+    //ds.groupByKey(_.job).count().show(false)
+    //ds.groupByKey(_.job).agg(max("age").as[Int], countDistinct("age").as[Long]).show()
+    //ds.groupByKey(_.job).mapValues(p => p.name + "(" + p.age + ")").reduceGroups((s1, s2) => s1 + s2).show()
+   
+  
+    ds.write.parquet(srcDir + File.separatorChar + "person")
+    val df = spark
+      .read
+      .load(srcDir + File.separatorChar + "person")
+    
+    df.show()
+   
   }
   
   def toInt(s: String): Int = {
